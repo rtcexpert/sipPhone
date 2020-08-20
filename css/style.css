@@ -1,0 +1,407 @@
+@import url("https://fonts.googleapis.com/css?family=Lato:300,400,700");
+html {
+  box-sizing: border-box;
+}
+
+*, *::after, *::before {
+  box-sizing: inherit;
+}
+
+input[type=text],
+input[type=email],
+input[type=password],
+textarea, .float-label, .field-bar, .auto-textarea, button, [type="checkbox"]:not(:checked) + label:before,
+[type="checkbox"]:checked + label:before, div.fancy-select div.trigger, div.fancy-select ul.options, div.fancy-select ul.options.open, div.fancy-select ul.options.overflowing, div.fancy-select ul.options.overflowing.open, div.fancy-select ul.options li {
+  -webkit-transition: all 0.25s ease-out;
+  -moz-transition: all 0.25s ease-out;
+  transition: all 0.25s ease-out;
+}
+
+body {
+  background: #efefef;
+  box-sizing: border-box;
+  font-family: "Lato";
+}
+
+.container {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 3rem 2rem;
+  border-radius: 1rem;
+}
+.container::after {
+  clear: both;
+  content: "";
+  display: block;
+}
+
+.field-wrapper {
+  float: left;
+  display: block;
+  margin-right: 2.3576520234%;
+  width: 100%;
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+.field-wrapper:last-child {
+  margin-right: 0;
+}
+
+.field-wrapper-half {
+  float: left;
+  display: block;
+  margin-right: 2.3576520234%;
+  width: 48.8211739883%;
+}
+.field-wrapper-half:last-child {
+  margin-right: 0;
+}
+.field-wrapper-half:nth-child(2n+1) {
+  margin-right: 0;
+}
+
+.button-wrapper {
+  float: left;
+  display: block;
+  margin-right: 2.3576520234%;
+  width: 100%;
+}
+
+.callBtn {
+  margin-top: 3px; 
+}
+.button-wrapper:last-child {
+  margin-right: 0;
+}
+
+input[type=text],
+input[type=email],
+input[type=password],
+textarea {
+  border: 0;
+  border-bottom: 1px solid #929292;
+  box-shadow: 0px 1px 0px #FFF;
+  color: #929292;
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 300;
+  height: 30px;
+  vertical-align: middle;
+  width: 100%;
+}
+input[type=text]::placeholder,
+input[type=email]::placeholder,
+input[type=password]::placeholder,
+textarea::placeholder {
+  opacity: 0;
+}
+input[type=text]::-webkit-input-placeholder,
+input[type=password]::-webkit-input-placeholder,
+input[type=email]::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #ddd;
+  font-family: "Lato";
+  opacity: 0;
+}
+input[type=text]:focus, input[type=text]:valid,
+input[type=email]:focus,
+input[type=email]:valid,
+input[type=password]:focus,
+input[type=password]:valid,
+textarea:focus,
+textarea:valid {
+  outline: 0;
+}
+input[type=text]:focus::placeholder, input[type=text]:valid::placeholder,
+input[type=password]:focus::placeholder, input[type=password]:valid::placeholder,
+input[type=email]:focus::placeholder,
+input[type=email]:valid::placeholder,
+textarea:focus::placeholder,
+textarea:valid::placeholder {
+  opacity: 1;
+}
+input[type=text]:focus::-webkit-input-placeholder, input[type=text]:valid::-webkit-input-placeholder,
+input[type=password]:focus::-webkit-input-placeholder, input[type=password]:valid::-webkit-input-placeholder,
+input[type=email]:focus::-webkit-input-placeholder,
+input[type=email]:valid::-webkit-input-placeholder,
+textarea:focus::-webkit-input-placeholder,
+textarea:valid::-webkit-input-placeholder {
+  opacity: 1;
+}
+
+.float-label {
+  color: #598C93;
+  text-transform: uppercase;
+  font-size: .75rem;
+  font-weight: bold;
+  position: absolute;
+  pointer-events: none;
+  top: 8px;
+}
+
+.field-bar {
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);
+  position: relative;
+  left: 50%;
+  height: 2px;
+  width: 0%;
+  display: block;
+  background: #598C93;
+  top: -1px;
+  z-index: 1;
+}
+
+/* active state */
+.float-field:focus ~ label,
+.float-field:valid ~ label,
+textarea:focus ~ label,
+textarea:valid ~ label,
+.fancy-select.selected ~ label,
+.fancy-select.open ~ label {
+  top: -20px;
+  font-size: .75rem;
+  color: #009688;
+}
+
+.trigger ~ label {
+  color: red;
+}
+
+input[type=text]:focus ~ .field-bar,
+input[type=text]:valid ~ .field-bar,
+input[type=email]:focus ~ .field-bar,
+input[type=email]:valid ~ .field-bar,
+.fancy-select.selected ~ .field-bar,
+.fancy-select.open ~ .field-bar,
+textarea:focus ~ .field-bar,
+textarea:valid ~ .field-bar {
+  width: 100%;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #FFF;
+  border: 0;
+  border-bottom: 1px solid #929292;
+  border-radius: 0;
+  color: #598C93;
+  font-family: "Lato";
+  font-size: .75rem;
+  font-weight: bold;
+  height: 30px;
+  position: relative;
+  text-transform: uppercase;
+  width: 100%;
+}
+select ~ label {
+  opacity: 1;
+}
+select:focus {
+  outline: none;
+}
+select:focus ~ .field-bar {
+  width: 100%;
+}
+select:focus ~ label {
+  opacity: 1;
+}
+
+.auto-textarea {
+  resize: none;
+  overflow: hidden;
+  line-height: 1.6;
+  height: 60px;
+  padding-bottom: .5rem;
+}
+
+button {
+  background: #598C93;
+  border: 0;
+  border-radius: 1.5rem;
+  box-shadow: 4px 4px 5px rgba(146, 146, 146, 0.4);
+  color: #FFF;
+  font-family: "Lato";
+  font-size: .75rem;
+  letter-spacing: .75px;
+  padding: .5rem 2.5rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:hover {
+  background: #466e73;
+}
+
+.checkbox-title {
+  color: #598C93;
+  text-transform: uppercase;
+  font-size: .75rem;
+  font-weight: bold;
+  pointer-events: none;
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.checkbox-wrapper {
+  display: inline-block;
+  margin: 0 .5rem;
+}
+
+[type="checkbox"] + label {
+  color: #929292;
+  font-size: .75rem;
+}
+
+[type="checkbox"]:not(:checked),
+[type="checkbox"]:checked {
+  position: absolute;
+  left: -9999px;
+}
+
+[type="checkbox"]:not(:checked) + label,
+[type="checkbox"]:checked + label {
+  position: relative;
+  padding-left: 1.95em;
+  cursor: pointer;
+}
+
+[type="checkbox"]:not(:checked) + label:before,
+[type="checkbox"]:checked + label:before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0px;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #598C93;
+  background: #fff;
+  border-radius: 2px;
+}
+
+[type="checkbox"]:checked + label:before {
+  background: #598C93;
+}
+
+div.fancy-select {
+  position: relative;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 13px;
+  color: #46565D;
+  border-bottom: 1px solid #929292;
+}
+
+div.fancy-select.disabled {
+  opacity: 0.5;
+}
+
+div.fancy-select select:focus + div.trigger {
+  background: rgba(146, 146, 146, 0.1);
+}
+
+div.fancy-select select:focus + div.trigger.open {
+  box-shadow: none;
+}
+
+div.fancy-select div.trigger {
+  border-radius: 0;
+  cursor: pointer;
+  padding: 8px 24px 8px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  background: #FFF;
+  color: #598C93;
+  height: 30px;
+  width: 100%;
+}
+
+div.fancy-select div.trigger:after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-top-color: #4B5468;
+  top: 15px;
+  right: 9px;
+}
+
+div.fancy-select div.trigger.open {
+  background: #FFF;
+  color: #598C93;
+  box-shadow: none;
+}
+
+div.fancy-select div.trigger.open:after {
+  border-top-color: #7A8498;
+}
+
+div.fancy-select ul.options {
+  list-style: none;
+  border: 1px solid #eee;
+  margin: 0;
+  position: absolute;
+  top: 32px;
+  left: 0;
+  padding-left: 0;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 50;
+  max-height: 200px;
+  overflow: auto;
+  background: #FFF;
+  min-width: 100%;
+}
+
+div.fancy-select ul.options.open {
+  visibility: visible;
+  top: 32px;
+  opacity: 1;
+  /* have to use a non-visibility transition to prevent this iOS issue (bug?): */
+  /*http://stackoverflow.com/questions/10736478/css-animation-visibility-visible-works-on-chrome-and-safari-but-not-on-ios*/
+}
+
+div.fancy-select ul.options.overflowing {
+  top: auto;
+  bottom: 40px;
+}
+
+div.fancy-select ul.options.overflowing.open {
+  top: auto;
+  bottom: 50px;
+}
+
+div.fancy-select ul.options li {
+  padding: 8px 12px;
+  color: #929292;
+  cursor: pointer;
+  white-space: nowrap;
+  font-weight: normal;
+  text-transform: none;
+  transition: all 150ms ease-out;
+}
+
+div.fancy-select ul.options li.selected {
+  background: #598C93;
+  color: #FFF;
+}
+
+div.fancy-select ul.options li.hover {
+  background: #598C93;
+  color: #FFF;
+}
+
+.backButton {
+  padding: 5px 7px;
+}

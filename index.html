@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hello World</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="js/sip-0.11.4.js"></script>
+  <script type="text/javascript" src="js/exSip.js"></script>
+</head>
+<body>
+<div class="container" id="configTab">
+  <div class="field-wrapper">
+    <input type="text" id="sipUri" value="demo3@voice.chatchilla.com" name="uri" placeholder="sip:xxxx@demo.xxx.com" class="float-field" required/>
+    <label for="name" class="float-label">uri</label>
+    <div class="field-bar"></div>
+  </div>
+  <div class="field-wrapper">
+    <input type="text" id="sipWsServers" value="wss://voice.chatchilla.com:9344" name="sipWsServers" placeholder="wss://demo.xxx.com/slash/sip" class="float-field" required/>
+    <label for="name" class="float-label">wsServers</label>
+    <div class="field-bar"></div>
+  </div>
+  <div class="field-wrapper">
+    <input type="password" id="sipPassword" value="989" name="sipPassword" class="float-field" placeholder="John Smith" required/>
+    <label for="name" class="float-label">password</label>
+    <div class="field-bar"></div>
+  </div>
+  <div class="button-wrapper">
+    <button id="buttonlogintoregister" type="submit">Submit</button>
+  </div>
+</div>
+<div class="container" id="callTab" style="display: none">
+  <button id="showConfigTab" class="backButton">
+    <i class="fa fa-arrow-left"></i>
+  </button>
+  <div class="field-wrapper">
+    <label id="sipStatus" for="name" class="float-label">Connected</label>
+    <!-- <button id="register" style="float: right">Register</button> -->
+  </div>
+  <div class="field-wrapper">
+    <label id="callStatus" for="name" class="float-label"></label>
+  </div>
+  <div class="field-wrapper">
+    <input type="text" id="callUri" value="" name="uri" placeholder="sip:xxxx@demo.xxx.com" class="float-field" required/>
+    <label for="name" class="float-label">SIP URI</label>
+    <div class="field-bar"></div>
+  </div>
+  <div class="field-wrapper">
+    <label>TYPE</label>
+    <select id="callType">
+      <option value="pstn">PSTN</option>
+      <option value="sip">SIP/WEB</option>
+      <option value="conference">Conference</option>
+      <option value="group">Group</option>
+    </select>
+  </div>
+  <div class="field-wrapper">
+    <label>GATEWAY</label>
+    <select id="gateway" placeholder="chatChillaGateway">
+        <option value="indiaDomestic">IndiaDomestic</option>
+        <option value="usInternational">UsInternational</option>
+    </select>
+  </div>
+  <div class="field-wrapper">
+    <input type="text" id="conferenceId" value="" name="uri" placeholder="" class="float-field" required/>
+    <label for="name" class="float-label">CONFERENCE ID</label>
+    <div class="field-bar"></div>
+  </div>
+  <div class="field-wrapper">
+    <input type="text" id="groupId" value="" name="uri" placeholder="" class="float-field" required/>
+    <label for="name" class="float-label">Group ID</label>
+    <div class="field-bar"></div>
+  </div>
+  <div class="field-wrapper">
+    <div id="sipCall" class="button-wrapper callBtn">
+      <button id="call" >CALL</button>
+    </div>
+  </div>
+  <div id="sipMute" class="button-wrapper callBtn" style="display: none">
+    <button id="mute" >Mute</button>
+  </div>
+  <div id="sipUnmute" class="button-wrapper callBtn" style="display: none">
+    <button id="unmute" >UnMute</button>
+  </div>
+  <div id="sipEnd" class="button-wrapper callBtn" style="display: none">
+    <button id="end" >END</button>
+  </div>
+  <div id="answerCall" class="button-wrapper callBtn" style="display: none">
+    <button id="answer" >answerCall</button>
+  </div>
+</div>
+<video id="remoteView"></video>
+<script type="text/javascript">
+  
+  var sourceValue = null;
+  
+  var elements = {
+        configForm:      document.getElementById('config-form'),
+        uaStatus:        document.getElementById('sipStatus'),
+        registerButton:  document.getElementById('ua-register'),
+        newSessionForm:  document.getElementById('new-session-form'),
+        inviteButton:    document.getElementById('ua-invite-submit'),
+        messageButton:   document.getElementById('ua-message-submit'),
+        uaVideo:         document.getElementById('ua-video'),
+        uaURI:           document.getElementById('ua-uri'),
+        sessionList:     document.getElementById('session-list'),
+        sessionTemplate: document.getElementById('session-template'),
+        messageTemplate: document.getElementById('message-template'),
+        register:        document.getElementById('register'),
+        callStatus:        document.getElementById('callStatus'),
+      };
+
+  var sipPhone = null;
+  var registerBtn = function(){
+
+    var sipUri       = document.getElementById("sipUri").value,
+        sipWsServers = document.getElementById("sipWsServers").value,
+        sipPassword  = document.getElementById("sipPassword").value;
+
+    sourceValue = sipUri;
+
+    var slashConfig = {
+          password  : sipPassword,
+          uri       : sipUri,
+          wsServers : sipWsServers,
+          register: true,
+          registerExpires: 45,
+        };
+    
+    var media = { remote: { audio: document.getElementById('remoteView') } };
+
+    elements.uaStatus.innerHTML = 'Connecting...';
+
+    sipPhone = new exSip(slashConfig, media);
+
+    sipPhone.on('registered', function( response, cause ) {
+
+      console.log("sipPhone Event registered",response, cause);
+      elements.uaStatus.innerHTML = 'Connected (Registered)';
+    });
+
+    sipPhone.on('unregistered', function( response, cause ) {
+
+      console.log("sipPhone Event unregistered",response, cause);
+      elements.uaStatus.innerHTML = 'Connected (Unregistered)';
+      // register.style.display = "block";
+    });
+
+    sipPhone.on('registrationFailed', function( response, cause ) {
+
+      console.log("sipPhone Event registrationFailed");
+      document.getElementById("sipStatus").textContent = "registrationFailed"; 
+    });
+
+    sipPhone.on('invite', function( session ) {
+
+      console.log("sipPhone Event invite",session);
+      // sipPhone.answer();
+    });
+
+    sipPhone.on('outOfDialogReferRequested', function(referServerContext) {
+
+      console.log("sipPhone Event outOfDialogReferRequested", referServerContext);
+    });
+
+    sipPhone.on('transportCreated', function(transport) {
+
+      console.log("sipPhone Event transportCreated", transport);
+    });
+
+    sipPhone.on('new', function() {
+
+      console.log("Event new");
+    });
+    sipPhone.on('accepted', function() {
+
+      console.log("Event accepted");
+    });
+
+    sipPhone.on('ringing', function() {
+
+      console.log("Event ringing");
+      elements.callStatus.innerHTML = 'Ringing';
+      elements.callStatus.style.display = 'block';
+
+      $(".callBtn").hide()
+      $("#answerCall").show();
+      $("#sipEnd").show();
+    });
+
+    sipPhone.on('connecting', function() {
+
+      console.log("Event connecting");
+    });
+
+    sipPhone.on('connected', function() {
+
+      console.log("Event connected");
+      elements.callStatus.innerHTML = 'Agent Answered';
+      elements.callStatus.style.display = 'block';
+      $("#answerCall").hide();
+      // elements.uaStatus.innerHTML = 'Connected (Unregistered)';
+      // register.style.display = "none";
+    });
+
+    sipPhone.on('ended', function() {
+
+      console.log("Event ended");
+      elements.callStatus.innerHTML = 'Agent Ended';
+      elements.callStatus.style.display = 'block';
+      $(".callBtn").hide();
+      $("#sipCall").show();
+    });
+
+    sipPhone.on('hold', function() {
+
+      console.log("Event hold");
+    });
+
+    sipPhone.on('unhold', function() {
+
+      console.log("Event unhold");
+    });
+
+    sipPhone.on('mute', function() {
+
+      console.log("Event mute");
+    });
+
+    sipPhone.on('unmute', function() {
+
+      console.log("Event unmute");
+    });
+
+    sipPhone.on('dtmf', function() {
+
+      console.log("Event dtmf");
+    });
+
+    sipPhone.on('message', function() {
+
+      console.log("Event message");
+    });
+  
+    var configTab = document.getElementById("configTab");
+    var callTab   = document.getElementById("callTab");
+
+    callTab.style.display = "block";
+    configTab.style.display = "none";
+  }
+
+  var showConfigTab = function() {
+
+    callTab.style.display = "none";
+    configTab.style.display = "block";
+
+    sipPhone.stop();
+  }
+
+  var callEnd = function(){
+
+    sipPhone.terminate();
+  }
+  var answerCall = function(){
+
+    sipPhone.answer();
+  }
+
+  var call = function(){
+
+    var callUri      = $("#callUri").val()      || "",
+        callType     = $("#callType").val()     || "",
+        gateway      = $("#gateway").val()      || "",
+        conferenceId = $("#conferenceId").val() || "",
+        groupId      = $("#groupId").val()      || "";
+
+    console.log("Sip Cal", callUri, callType, gateway, conferenceId, groupId); 
+    var result =sipPhone.call( callUri, callType, gateway, conferenceId, groupId );
+    console.log("result", result);
+  }
+
+  document.getElementById("buttonlogintoregister").onclick = registerBtn;
+
+  document.getElementById("showConfigTab").onclick = showConfigTab;
+  document.getElementById("sipEnd").onclick = callEnd;
+  document.getElementById("answerCall").onclick = answerCall;
+  document.getElementById("call").onclick = call;
+  // document.getElementById("pstnCall").onclick = pstnCall;
+</script>
+</body>
+</html>
